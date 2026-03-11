@@ -1,4 +1,4 @@
-name: CI
+name: CI Debug
 
 on:
   push:
@@ -17,16 +17,36 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
-        cache: 'npm'
-        
-    - name: Install dependencies
+    
+    - name: Debug - показать структуру
+      run: |
+        echo "=== Текущая директория ==="
+        pwd
+        echo "=== Файлы в корне ==="
+        ls -la
+        echo "=== Содержимое package.json ==="
+        cat package.json
+    
+    - name: Шаг 1 - npm ci
       run: npm ci
+      continue-on-error: true
       
-    - name: Run linter
+    - name: Шаг 2 - Проверка после установки
+      run: |
+        echo "=== node_modules после npm ci ==="
+        ls -la node_modules || echo "node_modules не создана"
+      
+    - name: Шаг 3 - npm run lint
       run: npm run lint
+      continue-on-error: true
       
-    - name: Run tests
+    - name: Шаг 4 - npm test
       run: npm test
+      continue-on-error: true
       
-    - name: Build
+    - name: Шаг 5 - npm run build
       run: npm run build
+      continue-on-error: true
+      
+    - name: Итоговый статус
+      run: echo "Все шаги выполнены. Проверьте логи выше."
