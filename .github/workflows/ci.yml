@@ -6,38 +6,26 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   test:
-    runs-on: ubuntu-24.04
-
+    runs-on: ubuntu-latest
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
       with:
-        node-version: '24.10.0'
-        cache: 'npm'
-
-    - name: Clear npm cache
-      run: npm cache clean --force
-
-    - name: Remove old dependencies
-      run: rm -rf node_modules package-lock.json
-
+        node-version: '18.x'
+        
     - name: Install dependencies
-      run: npm install --no-audit --no-fund
-
-    - name: Run linter
+      run: npm ci
+      
+    - name: Run ESLint
       run: npm run lint
-
-    - name: Run tests
-      run: npm test
-
+      
+    - name: Run tests with coverage
+      run: npm run test:coverage
+      
     - name: Build project
       run: npm run build
-      continue-on-error: true
