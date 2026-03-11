@@ -21,7 +21,6 @@
   ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/EwgeniyNikol/Object_Reflection_Proxy/issues"
   },
